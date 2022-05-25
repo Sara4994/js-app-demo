@@ -1,12 +1,15 @@
 import uuidv4 from 'uuid/v4';
 import { renderTodoList } from './views';
+import { setFilters } from './filter';
 
 let todos = [];
 
 
-// document.querySelector('#filter-text').addEventListener('change', (event) => {
-//     console.log('text', event.target.value)
-// })
+document.querySelector('#filter-text').addEventListener('input', (event) => {
+    console.log('filter text', event.target.value)
+    setFilters({searchText: event.target.value})
+    renderTodoList()
+})
 
 
 document.querySelector('#todo-form').addEventListener('submit' , (event) => {
@@ -21,6 +24,16 @@ document.querySelector('#todo-form').addEventListener('submit' , (event) => {
     }
     console.log('todos', todos)
 })
+
+const loadTodos = () => {
+    const todosJSON = localStorage.getItem('todos')
+
+    try {
+        todos = todosJSON ? JSON.parse(todosJSON) : []
+    } catch(e) {
+        todos = []
+    }
+}
 
 const saveTodo = () => {
     localStorage.setItem('todos', JSON.stringify(todos))
@@ -54,5 +67,9 @@ const toggleTodo = (id) => {
         saveTodo()
     }
 }
+
+loadTodos();
+
+renderTodoList();
 
 export { deleteTodo, todos, toggleTodo }

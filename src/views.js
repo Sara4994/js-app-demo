@@ -1,13 +1,31 @@
+import { getFilters } from './filter';
 import { deleteTodo, todos, toggleTodo } from './index';
 
 const renderTodoList = () => {
     const todoEl = document.querySelector('#todos');
 
+    const filters = getFilters();
+
+    const filteredTodos = todos.filter((todo) => {
+        const alteredText = todo.text.toLowerCase();
+        const alteredSearchText = filters.searchText.toLowerCase()
+        const searchTextMatch = alteredText.includes(alteredSearchText)
+        return searchTextMatch
+    })
     todoEl.innerHTML = '';
 
-    todos.forEach((todo) => {
-        todoEl.appendChild(createTodoUI(todo));
-    })
+    if(filteredTodos.length > 0) {
+        console.log('i am in if condition')
+        filteredTodos.forEach((todo) => {
+            todoEl.appendChild(createTodoUI(todo))
+        })
+    } else {
+        console.log('i am in else condition')
+        const messageEle = document.createElement('p');
+        messageEle.classList.add('empty-message');
+        messageEle.textContent = 'No list to show';
+        todoEl.appendChild(messageEle);
+    }
 }
 
 
